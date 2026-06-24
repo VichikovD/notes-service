@@ -1,0 +1,29 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+dependency-reduced-pom.xml
+.mvn/timing.properties
+
+# OWASP dependency-check data cache
+**/dependency-check-data/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+nbproject/private/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / runtime
+*.log
+*.pid

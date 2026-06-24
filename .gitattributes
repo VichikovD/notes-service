@@ -1,0 +1,9 @@
+# Normalize all text files to LF in the repository (required by google-java-format / Spotless).
+* text=auto eol=lf
+
+# Windows batch wrapper must keep CRLF.
+*.cmd text eol=crlf
+
+# Binary artifacts.
+*.jar binary
+*.class binary

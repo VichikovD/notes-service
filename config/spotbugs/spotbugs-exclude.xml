@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+    xmlns="https://github.com/spotbugs/filter/3.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/findbugsfilter.xsd">
+
+  <!-- Entities are JPA-managed; exposing/storing mutable Instant/collections is acceptable here. -->
+  <Match>
+    <Class name="com.example.notes.domain.Note"/>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+  </Match>
+
+  <!-- Records intentionally carry mutable maps in error payloads. -->
+  <Match>
+    <Class name="com.example.notes.web.ApiError"/>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+  </Match>
+
+  <!--
+    Spring constructor injection stores bean references (service, repository, mapper, clock).
+    SpotBugs flags this as EI_EXPOSE_REP2, but for singleton-scoped Spring beans it is a
+    false positive, so it is suppressed for the controller and service layers.
+  -->
+  <Match>
+    <Or>
+      <Package name="com.example.notes.web"/>
+      <Package name="com.example.notes.service"/>
+    </Or>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+  </Match>
+
+  <!-- Generated test classes are not analysed. -->
+  <Match>
+    <Source name="~.*Test\.java"/>
+  </Match>
+</FindBugsFilter>
