@@ -76,6 +76,12 @@ public class NoteServiceImpl implements NoteService {
         .toList();
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public long count(Boolean done) {
+    return done == null ? repository.count() : repository.countByDone(done);
+  }
+
   private Note findOrThrow(Long id) {
     return repository.findById(id).orElseThrow(() -> new NoteNotFoundException(id));
   }
