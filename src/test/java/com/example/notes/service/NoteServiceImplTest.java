@@ -113,6 +113,20 @@ class NoteServiceImplTest {
   }
 
   @Test
+  void update_refreshesUpdatedAt() {
+    Note note = new Note("Old", "Old body", false);
+    note.markCreated(Instant.parse("2025-12-01T00:00:00Z"));
+    setId(note, 1L);
+    when(repository.findById(1L)).thenReturn(Optional.of(note));
+    when(repository.save(any(Note.class))).thenAnswer(inv -> inv.getArgument(0));
+
+    NoteResponse response = service.update(1L, new UpdateNoteRequest("New", null, true));
+
+    assertThat(response.updatedAt()).isEqualTo(FIXED);
+    assertThat(response.updatedAt()).isNotEqualTo(response.createdAt());
+  }
+
+  @Test
   void update_throwsNotFound_whenMissing() {
     when(repository.findById(7L)).thenReturn(Optional.empty());
 

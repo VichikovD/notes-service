@@ -52,6 +52,7 @@ public class NoteServiceImpl implements NoteService {
     note.setTitle(request.title());
     note.setContent(request.content());
     note.setDone(request.done());
+    note.touch(Instant.now(clock));
     return mapper.toResponse(repository.save(note));
   }
 
