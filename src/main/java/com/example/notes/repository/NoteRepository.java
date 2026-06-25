@@ -11,4 +11,6 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
   boolean existsByTitleIgnoreCase(String title);
 
   java.util.List<Note> findByTitleContainingIgnoreCase(String title);
+
+  long countByDone(boolean done);
 }
