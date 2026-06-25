@@ -34,8 +34,25 @@ class NoteRepositoryIT extends AbstractPostgresIT {
     assertThat(repository.count()).isEqualTo(2);
   }
 
+  @Test
+  void findAllByDone_returnsOnlyMatching() {
+    repository.deleteAll();
+    repository.save(withDone("done one", true));
+    repository.save(withDone("open one", false));
+
+    assertThat(repository.findAllByDoneOrderByCreatedAtDesc(true))
+        .extracting(Note::getTitle)
+        .containsExactly("done one");
+  }
+
   private static Note stamped(String title) {
     Note note = new Note(title, null, false);
+    note.markCreated(Instant.parse("2026-01-01T10:00:00Z"));
+    return note;
+  }
+
+  private static Note withDone(String title, boolean done) {
+    Note note = new Note(title, null, done);
     note.markCreated(Instant.parse("2026-01-01T10:00:00Z"));
     return note;
   }
