@@ -4,6 +4,7 @@ import com.example.notes.dto.CreateNoteRequest;
 import com.example.notes.dto.NoteResponse;
 import com.example.notes.dto.UpdateNoteRequest;
 import com.example.notes.service.NoteService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class NoteController {
   }
 
   @PostMapping
-  public ResponseEntity<NoteResponse> create(@RequestBody CreateNoteRequest request) {
+  public ResponseEntity<NoteResponse> create(@Valid @RequestBody CreateNoteRequest request) {
     NoteResponse created = noteService.create(request);
     return ResponseEntity.created(URI.create("/api/notes/" + created.id())).body(created);
   }
@@ -46,7 +47,7 @@ public class NoteController {
   }
 
   @PutMapping("/{id}")
-  public NoteResponse update(@PathVariable Long id, @RequestBody UpdateNoteRequest request) {
+  public NoteResponse update(@PathVariable Long id, @Valid @RequestBody UpdateNoteRequest request) {
     return noteService.update(id, request);
   }
 

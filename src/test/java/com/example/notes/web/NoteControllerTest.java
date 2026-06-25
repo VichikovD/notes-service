@@ -55,6 +55,20 @@ class NoteControllerTest {
   }
 
   @Test
+  void create_returns400_whenTitleBlank() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/notes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    objectMapper.writeValueAsString(
+                        Map.of("title", "   ", "content", "Body", "done", false))))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Bad Request"))
+        .andExpect(jsonPath("$.fieldErrors.title").exists());
+  }
+
+  @Test
   void getById_returns200() throws Exception {
     when(noteService.getById(1L)).thenReturn(new NoteResponse(1L, "A", "B", true, TS, TS));
 
