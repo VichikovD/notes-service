@@ -68,6 +68,20 @@ public class NoteServiceImpl implements NoteService {
     repository.delete(note);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public java.util.List<NoteResponse> search(String query) {
+    return repository.findByTitleContainingIgnoreCase(query).stream()
+        .map(mapper::toResponse)
+        .toList();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public long count(Boolean done) {
+    return done == null ? repository.count() : repository.countByDone(done);
+  }
+
   private Note findOrThrow(Long id) {
     return repository.findById(id).orElseThrow(() -> new NoteNotFoundException(id));
   }

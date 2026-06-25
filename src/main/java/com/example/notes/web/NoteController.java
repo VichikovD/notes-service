@@ -46,6 +46,16 @@ public class NoteController {
     return noteService.findAll(done);
   }
 
+  @GetMapping("/search")
+  public List<NoteResponse> search(@RequestParam String q) {
+    return noteService.search(q);
+  }
+
+  @GetMapping("/count")
+  public long count(@RequestParam(required = false) Boolean done) {
+    return noteService.count(done);
+  }
+
   @PutMapping("/{id}")
   public NoteResponse update(@PathVariable Long id, @Valid @RequestBody UpdateNoteRequest request) {
     return noteService.update(id, request);

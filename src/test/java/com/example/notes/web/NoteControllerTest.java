@@ -137,6 +137,28 @@ class NoteControllerTest {
   }
 
   @Test
+  void search_returns200() throws Exception {
+    when(noteService.search("mi"))
+        .thenReturn(List.of(new NoteResponse(1L, "milk", null, false, TS, TS)));
+
+    mockMvc
+        .perform(get("/api/notes/search").param("q", "mi"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(1))
+        .andExpect(jsonPath("$[0].title").value("milk"));
+  }
+
+  @Test
+  void count_returns200() throws Exception {
+    when(noteService.count(true)).thenReturn(7L);
+
+    mockMvc
+        .perform(get("/api/notes/count").param("done", "true"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").value(7));
+  }
+
+  @Test
   void delete_returns204() throws Exception {
     mockMvc.perform(delete("/api/notes/1")).andExpect(status().isNoContent());
   }

@@ -72,3 +72,11 @@ git config core.hooksPath .githooks
 - [docs/ci-cd.md](docs/ci-cd.md) — пайплайны GitHub/GitLab
 - [docs/platform-comparison.md](docs/platform-comparison.md) — исследование GitHub vs GitLab
 - [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), [SECURITY.md](SECURITY.md)
+
+## Дополнительные эндпоинты
+
+| Метод | Путь | Назначение |
+|---|---|---|
+| `GET` | `/api/notes/search?q=` | поиск заметок по подстроке заголовка |
+| `GET` | `/api/notes/count?done=` | количество заметок (опц. фильтр по статусу) |
+| `GET` | `/actuator/health` | проверка работоспособности сервиса |

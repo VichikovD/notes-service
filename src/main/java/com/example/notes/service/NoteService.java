@@ -13,6 +13,10 @@ public interface NoteService {
 
   List<NoteResponse> findAll(Boolean done);
 
+  java.util.List<NoteResponse> search(String query);
+
+  long count(Boolean done);
+
   NoteResponse update(Long id, UpdateNoteRequest request);
 
   void delete(Long id);

@@ -176,6 +176,31 @@ class NoteServiceImplTest {
     verify(repository, never()).delete(any());
   }
 
+  @Test
+  void search_delegatesToRepository() {
+    when(repository.findByTitleContainingIgnoreCase("mi"))
+        .thenReturn(List.of(persistedNote(1L, "milk", null, false)));
+
+    List<NoteResponse> result = service.search("mi");
+
+    assertThat(result).hasSize(1).extracting(NoteResponse::title).containsExactly("milk");
+  }
+
+  @Test
+  void count_withoutFilter_usesRepositoryCount() {
+    when(repository.count()).thenReturn(5L);
+
+    assertThat(service.count(null)).isEqualTo(5L);
+  }
+
+  @Test
+  void count_withFilter_usesCountByDone() {
+    when(repository.countByDone(true)).thenReturn(3L);
+
+    assertThat(service.count(true)).isEqualTo(3L);
+    verify(repository, never()).count();
+  }
+
   private Note persistedNote(Long id, String title, String content, boolean done) {
     Note note = new Note(title, content, done);
     note.markCreated(FIXED);
