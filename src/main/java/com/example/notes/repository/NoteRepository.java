@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
-  List<Note> findAllByDone(boolean done);
+  List<Note> findAllByDoneOrderByCreatedAtDesc(boolean done);
 
   boolean existsByTitleIgnoreCase(String title);
 }

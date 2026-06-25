@@ -112,7 +112,8 @@ class NoteServiceImplTest {
 
   @Test
   void findAll_withDoneFilter_delegatesToDerivedQuery() {
-    when(repository.findAllByDone(true)).thenReturn(List.of(persistedNote(2L, "B", null, true)));
+    when(repository.findAllByDoneOrderByCreatedAtDesc(true))
+        .thenReturn(List.of(persistedNote(2L, "B", null, true)));
 
     List<NoteResponse> result = service.findAll(true);
 

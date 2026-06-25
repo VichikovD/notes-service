@@ -40,7 +40,7 @@ class NoteRepositoryIT extends AbstractPostgresIT {
     repository.save(withDone("done one", true));
     repository.save(withDone("open one", false));
 
-    assertThat(repository.findAllByDone(true))
+    assertThat(repository.findAllByDoneOrderByCreatedAtDesc(true))
         .extracting(Note::getTitle)
         .containsExactly("done one");
   }
