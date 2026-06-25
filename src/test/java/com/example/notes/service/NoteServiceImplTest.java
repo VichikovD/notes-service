@@ -99,6 +99,17 @@ class NoteServiceImplTest {
   }
 
   @Test
+  void findAll_withDoneFilter_delegatesToDerivedQuery() {
+    when(repository.findAllByDone(true)).thenReturn(List.of(persistedNote(2L, "B", null, true)));
+
+    List<NoteResponse> result = service.findAll(true);
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).done()).isTrue();
+    verify(repository, never()).findAll();
+  }
+
+  @Test
   void update_changesFields() {
     Note note = persistedNote(1L, "Old", "Old body", false);
     when(repository.findById(1L)).thenReturn(Optional.of(note));

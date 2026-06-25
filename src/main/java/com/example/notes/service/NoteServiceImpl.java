@@ -43,7 +43,8 @@ public class NoteServiceImpl implements NoteService {
   @Override
   @Transactional(readOnly = true)
   public List<NoteResponse> findAll(Boolean done) {
-    return repository.findAll().stream().map(mapper::toResponse).toList();
+    List<Note> notes = done == null ? repository.findAll() : repository.findAllByDone(done);
+    return notes.stream().map(mapper::toResponse).toList();
   }
 
   @Override
