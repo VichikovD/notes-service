@@ -9,4 +9,6 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
   List<Note> findAllByDoneOrderByCreatedAtDesc(boolean done);
 
   boolean existsByTitleIgnoreCase(String title);
+
+  java.util.List<Note> findByTitleContainingIgnoreCase(String title);
 }
