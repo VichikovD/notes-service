@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.notes.dto.NoteResponse;
+import com.example.notes.exception.DuplicateNoteTitleException;
 import com.example.notes.exception.NoteNotFoundException;
 import com.example.notes.service.NoteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +67,21 @@ class NoteControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error").value("Bad Request"))
         .andExpect(jsonPath("$.fieldErrors.title").exists());
+  }
+
+  @Test
+  void create_returns409_whenDuplicateTitle() throws Exception {
+    when(noteService.create(any())).thenThrow(new DuplicateNoteTitleException("Title"));
+
+    mockMvc
+        .perform(
+            post("/api/notes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    objectMapper.writeValueAsString(
+                        Map.of("title", "Title", "content", "Body", "done", false))))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.error").value("Conflict"));
   }
 
   @Test
