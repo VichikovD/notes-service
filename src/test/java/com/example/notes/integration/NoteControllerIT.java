@@ -74,4 +74,32 @@ class NoteControllerIT extends AbstractPostgresIT {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).hasSize(2);
   }
+
+  @Test
+  void search_findsNotesByTitleSubstring() {
+    restTemplate.postForEntity(
+        "/api/notes", new CreateNoteRequest("Buy milk", null, false), NoteResponse.class);
+    restTemplate.postForEntity(
+        "/api/notes", new CreateNoteRequest("Call doctor", null, false), NoteResponse.class);
+
+    ResponseEntity<NoteResponse[]> response =
+        restTemplate.getForEntity("/api/notes/search?q=milk", NoteResponse[].class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).hasSize(1);
+    assertThat(response.getBody()[0].title()).isEqualTo("Buy milk");
+  }
+
+  @Test
+  void count_reflectsPersistedNotes() {
+    restTemplate.postForEntity(
+        "/api/notes", new CreateNoteRequest("A", null, false), NoteResponse.class);
+    restTemplate.postForEntity(
+        "/api/notes", new CreateNoteRequest("B", null, true), NoteResponse.class);
+
+    ResponseEntity<Long> response = restTemplate.getForEntity("/api/notes/count", Long.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isEqualTo(2L);
+  }
 }
