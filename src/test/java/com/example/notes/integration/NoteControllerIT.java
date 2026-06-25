@@ -43,6 +43,18 @@ class NoteControllerIT extends AbstractPostgresIT {
   }
 
   @Test
+  void create_returns409_onDuplicateTitle() {
+    restTemplate.postForEntity(
+        "/api/notes", new CreateNoteRequest("Dup", null, false), NoteResponse.class);
+
+    ResponseEntity<String> conflict =
+        restTemplate.postForEntity(
+            "/api/notes", new CreateNoteRequest("dup", null, false), String.class);
+
+    assertThat(conflict.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+  }
+
+  @Test
   void getById_returns404_whenMissing() {
     ResponseEntity<String> response = restTemplate.getForEntity("/api/notes/999999", String.class);
 

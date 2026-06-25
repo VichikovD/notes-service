@@ -11,6 +11,7 @@ import com.example.notes.domain.Note;
 import com.example.notes.dto.CreateNoteRequest;
 import com.example.notes.dto.NoteResponse;
 import com.example.notes.dto.UpdateNoteRequest;
+import com.example.notes.exception.DuplicateNoteTitleException;
 import com.example.notes.exception.NoteNotFoundException;
 import com.example.notes.mapper.NoteMapper;
 import com.example.notes.repository.NoteRepository;
@@ -65,6 +66,17 @@ class NoteServiceImplTest {
     verify(repository).save(captor.capture());
     assertThat(captor.getValue().isDone()).isTrue();
     assertThat(captor.getValue().getCreatedAt()).isEqualTo(FIXED);
+  }
+
+  @Test
+  void create_throwsConflict_whenTitleAlreadyExists() {
+    when(repository.existsByTitleIgnoreCase("dup")).thenReturn(true);
+
+    assertThatThrownBy(() -> service.create(new CreateNoteRequest("dup", null, false)))
+        .isInstanceOf(DuplicateNoteTitleException.class)
+        .hasMessageContaining("dup");
+
+    verify(repository, never()).save(any());
   }
 
   @Test

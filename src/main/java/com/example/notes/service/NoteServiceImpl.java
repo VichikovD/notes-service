@@ -4,6 +4,7 @@ import com.example.notes.domain.Note;
 import com.example.notes.dto.CreateNoteRequest;
 import com.example.notes.dto.NoteResponse;
 import com.example.notes.dto.UpdateNoteRequest;
+import com.example.notes.exception.DuplicateNoteTitleException;
 import com.example.notes.exception.NoteNotFoundException;
 import com.example.notes.mapper.NoteMapper;
 import com.example.notes.repository.NoteRepository;
@@ -29,6 +30,9 @@ public class NoteServiceImpl implements NoteService {
 
   @Override
   public NoteResponse create(CreateNoteRequest request) {
+    if (repository.existsByTitleIgnoreCase(request.title())) {
+      throw new DuplicateNoteTitleException(request.title());
+    }
     Note note = mapper.toEntity(request);
     note.markCreated(Instant.now(clock));
     return mapper.toResponse(repository.save(note));

@@ -1,5 +1,6 @@
 package com.example.notes.web;
 
+import com.example.notes.exception.DuplicateNoteTitleException;
 import com.example.notes.exception.NoteNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiError> handleNotFound(NoteNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage()));
+  }
+
+  @ExceptionHandler(DuplicateNoteTitleException.class)
+  public ResponseEntity<ApiError> handleDuplicate(DuplicateNoteTitleException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(ApiError.of(HttpStatus.CONFLICT.value(), "Conflict", ex.getMessage()));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

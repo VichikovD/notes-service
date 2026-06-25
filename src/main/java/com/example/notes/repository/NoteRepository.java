@@ -3,4 +3,7 @@ package com.example.notes.repository;
 import com.example.notes.domain.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface NoteRepository extends JpaRepository<Note, Long> {}
+public interface NoteRepository extends JpaRepository<Note, Long> {
+
+  boolean existsByTitleIgnoreCase(String title);
+}
