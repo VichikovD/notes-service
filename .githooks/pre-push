@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# pre-push: run the fast unit-test suite before pushing.
+# Integration tests (*IT, Testcontainers) are intentionally left to CI to keep push fast.
+#
+set -euo pipefail
+
+echo "[pre-push] running unit tests (mvnw -q test)"
+
+./mvnw -q -Dcheckstyle.skip=true test
+
+echo "[pre-push] OK"

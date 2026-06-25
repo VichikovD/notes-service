@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# pre-commit: auto-format then enforce formatting + linting before a commit is created.
+# Enable once per clone:  git config core.hooksPath .githooks
+#
+set -euo pipefail
+
+echo "[pre-commit] spotless:apply + spotless:check + checkstyle:check"
+
+./mvnw -q spotless:apply spotless:check checkstyle:check
+
+# Re-stage files that spotless may have reformatted.
+git add -u
+
+echo "[pre-commit] OK"
